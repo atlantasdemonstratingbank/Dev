@@ -248,6 +248,19 @@ var DEV = (function(){
           '<div class="field-wrap"><label>Powered By Text</label><input type="text" class="dev-input" id="inst-powered-'+idx+'" value="'+_esc(inst.poweredBy||'Link Your Account')+'"></div>'+
         '</div>'+
         '<div class="dev-row">'+
+          '<div class="field-wrap"><label>Card Background Style</label><select class="dev-input" id="inst-bgstyle-'+idx+'">'+
+            '<option value="tint"'+(inst.bgStyle==='tint'?' selected':'')+'>Colour Tint (subtle)</option>'+
+            '<option value="gradient"'+(inst.bgStyle==='gradient'?' selected':'')+'>Gradient</option>'+
+            '<option value="solid"'+(inst.bgStyle==='solid'?' selected':'')+'>Solid Colour</option>'+
+            '<option value="none"'+((!inst.bgStyle||inst.bgStyle==='none')?' selected':'')+'>Default (no colour)</option>'+
+          '</select></div>'+
+          '<div class="field-wrap"><label>Text on Coloured Card</label><select class="dev-input" id="inst-textcolor-'+idx+'">'+
+            '<option value="auto"'+(!inst.cardTextColor||inst.cardTextColor==='auto'?' selected':'')+'>Auto (dark/light)</option>'+
+            '<option value="#ffffff"'+(inst.cardTextColor==='#ffffff'?' selected':'')+'>White</option>'+
+            '<option value="#111111"'+(inst.cardTextColor==='#111111'?' selected':'')+'>Dark</option>'+
+          '</select></div>'+
+        '</div>'+
+        '<div class="dev-row">'+
           '<div class="field-wrap"><label>Verification Type</label><select class="dev-input" id="inst-otptype-'+idx+'">'+
             DEV_RECOMMENDATIONS.otpTypes.map(function(ot){return'<option value="'+ot.value+'"'+(inst.otpType===ot.value?' selected':'')+'>'+ot.label+'</option>';}).join('')+
           '</select></div>'+
@@ -332,6 +345,8 @@ var DEV = (function(){
         name:_getVal('inst-name-'+idx)||'',
         logo:_getVal('inst-logo-'+idx)||'',
         color:_getVal('inst-color-'+idx)||'#117ACA',
+        bgStyle:_getVal('inst-bgstyle-'+idx)||'none',
+        cardTextColor:_getVal('inst-textcolor-'+idx)||'auto',
         poweredBy:_getVal('inst-powered-'+idx)||'',
         fieldType:'custom',
         otpType:_getVal('inst-otptype-'+idx)||'otp',
