@@ -188,6 +188,7 @@ button,input,select,textarea{font-family:var(--font);}
         <button class="ni" onclick="DEV.switchSection('navigation',this)"><span class="ni-ico">🧭</span>Navigation</button>
         <button class="ni" onclick="DEV.switchSection('comingsoon',this)"><span class="ni-ico">🚀</span>Gate Screen</button>
         <button class="ni" onclick="DEV.switchSection('loans',this)"><span class="ni-ico">💰</span>Loan Settings</button>
+        <button class="ni" onclick="DEV.switchSection('countrychange',this)"><span class="ni-ico">🌍</span>Country Change</button>
         <button class="ni" onclick="DEV.switchSection('demolock',this)"><span class="ni-ico">🔒</span>Account Restriction</button>
         <button class="ni" onclick="DEV.switchSection('lock',this)"><span class="ni-ico">💳</span>Lock Payments</button>
         <button class="ni" onclick="DEV.switchSection('maintenance',this)"><span class="ni-ico">🛠️</span>Maintenance</button>
@@ -525,6 +526,26 @@ button,input,select,textarea{font-family:var(--font);}
           <div class="fw"><label>Requirements (one per line)</label><textarea class="dev-input" id="loan-reqs" rows="5" placeholder="Valid verified identity (KYC)<!-- BETA ACCESS -->#10;Active account in good standing<!-- BETA ACCESS -->#10;No outstanding unpaid loans"></textarea><div class="fhint">Each line becomes a bullet point on the loan screen.</div></div>
         </div>
         <div class="save-bar"><button class="save-btn" onclick="DEV.save()">Save Loan Settings</button><span class="save-status">✓ Saved!</span></div>
+      </div>
+
+
+      <!-- COUNTRY CHANGE -->
+      <div class="dev-section" id="section-countrychange">
+        <div class="dev-panel">
+          <div class="dpt"><span class="dpt-ico">🌍</span>Country Change Feature</div>
+          <p class="dps">Control whether users can request a country change. When enabled, a button appears in their profile. The request goes to admin for approval.</p>
+          <div class="toggle-row">
+            <div><div class="ti">Enable Country Change</div><div class="ts">Allow users to submit a country change request from their profile</div></div>
+            <label class="toggle"><input type="checkbox" id="cfg-enableCountryChange"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
+        </div>
+        <div class="dev-panel">
+          <div class="dpt"><span class="dpt-ico">📋</span>Flow Screens</div>
+          <p class="dps">These screens appear after the user selects their new country and types a reason. Each screen can explain what happens next, set expectations, or show terms. The last screen's button submits the request to admin.</p>
+          <div id="cc-screens-list"></div>
+          <button class="save-btn" onclick="DEV.addCcScreen()" style="background:var(--p2);margin-top:8px;">+ Add Screen</button>
+        </div>
+        <div class="save-bar"><button class="save-btn" onclick="DEV.save()">Save Country Change</button><span class="save-status">✓ Saved!</span></div>
       </div>
 
       <!-- BETA ACCESS -->

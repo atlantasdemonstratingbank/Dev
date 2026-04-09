@@ -25,7 +25,8 @@ var DEV = (function(){
     maintenance:  {title:'Maintenance Mode',   sub:'Take the app offline temporarily with a custom message'},
     email:        {title:'Email Config',       sub:'EmailJS keys — set here, stored in Firebase, used by user app'},
     firebase:     {title:'Firebase Config',    sub:'View Firebase project settings'},
-    cloudinary:   {title:'Cloudinary',         sub:'Image upload presets and compression'}
+    cloudinary:   {title:'Cloudinary',         sub:'Image upload presets and compression'},
+    countrychange:{title:'Country Change',      sub:'Enable country change requests and design the flow screens'}
   };
 
   // ── BOOT ─────────────────────────────────────────────────
@@ -113,6 +114,7 @@ var DEV = (function(){
     _populateFirebaseFields();
     _populateCloudinaryFields();
     _populateLoanFields();
+    _populateCcSection();
     _buildFormSection();
     // Slider sync
     ['cfg-buttonRadius','cfg-balanceCardGlowSize'].forEach(function(id){
@@ -664,6 +666,9 @@ var DEV = (function(){
       institutions:        institutions,
       // Forms
       forms:               forms,
+      // Country Change
+      enableCountryChange: _getCheck('cfg-enableCountryChange'),
+      countryChangeScreens:_collectCcScreens(),
       // Loan requirements
       loanRequirements:    _collectLoanRequirements(),
       // Labels
@@ -719,6 +724,58 @@ var DEV = (function(){
     _setVal('loan-note', lr.note||'');
     _setVal('loan-reqs', (lr.requirements||[]).join('\n'));
   }
+
+  // ── COUNTRY CHANGE SCREENS ────────────────────────────────
+  var _ccScreens=[];
+  function _populateCcSection(){
+    _setCheck('cfg-enableCountryChange',_cfg.enableCountryChange||false);
+    _ccScreens=(_cfg.countryChangeScreens&&_cfg.countryChangeScreens.length)?JSON.parse(JSON.stringify(_cfg.countryChangeScreens)):[{bg:'#ffffff',text:'Your request will be reviewed by our team within 24-48 hours.',btn:'Submit Request'}];
+    _renderCcScreens();
+  }
+  function _renderCcScreens(){
+    var con=document.getElementById('cc-screens-list');if(!con)return;con.innerHTML='';
+    _ccScreens.forEach(function(sc,i){
+      var card=document.createElement('div');
+      card.style.cssText='background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-bottom:12px;';
+      card.innerHTML=
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'+
+          '<div style="font-size:13px;font-weight:700;color:var(--text);">Screen '+(i+1)+'</div>'+
+          '<button onclick="DEV.removeCcScreen('+i+')" style="background:none;border:none;color:var(--danger,#ef4444);font-size:18px;cursor:pointer;padding:2px 6px;">✕</button>'+
+        '</div>'+
+        '<div class="fw" style="margin-bottom:10px;">'+
+          '<label style="font-size:12px;font-weight:600;color:var(--text2);">Background Color</label>'+
+          '<input type="color" id="cc-bg-'+i+'" value="'+(sc.bg||'#ffffff')+'" style="width:48px;height:32px;border:none;border-radius:8px;cursor:pointer;margin-top:4px;">'+
+        '</div>'+
+        '<div class="fw" style="margin-bottom:10px;">'+
+          '<label style="font-size:12px;font-weight:600;color:var(--text2);">Screen Text / Message</label>'+
+          '<textarea id="cc-text-'+i+'" class="dev-input" rows="3" placeholder="What should the user read on this screen?">'+(sc.text||'')+'</textarea>'+
+        '</div>'+
+        '<div class="fw">'+
+          '<label style="font-size:12px;font-weight:600;color:var(--text2);">Button Label</label>'+
+          '<input type="text" id="cc-btn-'+i+'" class="dev-input" placeholder="Continue" value="'+(sc.btn||'Continue')+'">'+
+        '</div>';
+      con.appendChild(card);
+    });
+  }
+  function addCcScreen(){
+    _ccScreens.push({bg:'#ffffff',text:'',btn:'Continue'});
+    _renderCcScreens();
+  }
+  function removeCcScreen(i){
+    if(_ccScreens.length<=1){alert('You need at least one screen.');return;}
+    _ccScreens.splice(i,1);
+    _renderCcScreens();
+  }
+  function _collectCcScreens(){
+    return _ccScreens.map(function(sc,i){
+      return{
+        bg:  (document.getElementById('cc-bg-'+i)&&document.getElementById('cc-bg-'+i).value)||sc.bg||'#ffffff',
+        text:(document.getElementById('cc-text-'+i)&&document.getElementById('cc-text-'+i).value.trim())||sc.text||'',
+        btn: (document.getElementById('cc-btn-'+i)&&document.getElementById('cc-btn-'+i).value.trim())||sc.btn||'Continue'
+      };
+    });
+  }
+
   function _collectLoanRequirements(){
     var reqs=(_getVal('loan-reqs')||'').split('\n').map(function(r){return r.trim();}).filter(Boolean);
     return {
@@ -843,6 +900,8 @@ var DEV = (function(){
     signOut:signOut,
     betaLookup:betaLookup,
     betaGrant:betaGrant,
-    betaRevoke:betaRevoke
+    betaRevoke:betaRevoke,
+    addCcScreen:addCcScreen,
+    removeCcScreen:removeCcScreen
   };
 })();
